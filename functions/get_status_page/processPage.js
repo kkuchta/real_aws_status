@@ -6,7 +6,8 @@ function tables(doc) {
   return doc('#current_events_block table.fullWidth tbody');
 }
 
-// Ditch any rows in this table that say the service is operating normally.
+// Ditch any rows in this table that say the service is operating normally and
+// increment any other rows
 function removeHappiness(doc, table) {
   table.find('tr').each((_, row) => {
     const image = doc(row).find('img')[0];
@@ -15,6 +16,10 @@ function removeHappiness(doc, table) {
       const statusNode = doc(row.find('td')[2]);
       if (statusNode && statusNode.text().toLowerCase().indexOf('service is operating normally') == 0) {
         row.remove();
+      } else {
+        image.attribs.src = image.attribs.src.replace('status2', 'status3');
+        image.attribs.src = image.attribs.src.replace('status1', 'status2');
+        image.attribs.src = image.attribs.src.replace('status0', 'status1');
       }
     }
   });
