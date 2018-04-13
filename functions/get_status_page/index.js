@@ -1,7 +1,7 @@
-//console.log('starting function')
 
 const https = require('https');
 const zlib = require('zlib');
+const processPage = require('./processPage')
 
 // A thin promise wrapper around node's http get
 const httpGet = (url) => {
@@ -16,15 +16,8 @@ const httpGet = (url) => {
   });
 };
 
-const processPage = (pageBody) => {
-  console.log("processing page ");
-  pageBody = pageBody.replace('Current Status', 'Kujo &lt; Ethel');
-  return pageBody;
-}
-
 exports.handle = function(e, ctx, cb) {
   const request = e.Records[0].cf.request;
-  console.log('uri = ', request.uri)
 
   // If it's not the root page, pass it through
   if (request.uri !== '/') {
@@ -32,7 +25,14 @@ exports.handle = function(e, ctx, cb) {
   } else {
     httpGet('https://status.aws.amazon.com/').then(([page, headers]) => {
       const bodyRaw = processPage(page);
-      console.log("raw = ", bodyRaw);
+
+      // Write to a local file so I can test this without redeploying to lambda.
+      // The CSS won't load, but it'll at least display the basic html.
+      if (global.isLocal) {
+        let fs = require('fs');
+        fs.writeFile("/tmp/status.html", bodyRaw, () => {})
+      }
+
       const bodyBuffer = zlib.gzipSync(bodyRaw);
       const base64EncodedBody = bodyBuffer.toString('base64');
 
