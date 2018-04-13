@@ -1,7 +1,7 @@
 {
   "name": "real_aws",
   "description": "",
-  "memory": 128,
+  "memory": 1024,
   "timeout": 30,
   "role": "arn:aws:iam::732378318181:role/real_aws_lambda_function",
   "environment": {},

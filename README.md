@@ -9,4 +9,5 @@ To deploy:
   - The one in US east, because I keep forgetting and editing the wrong one
 3. Create a new lambda version (since cloudfront won't accept $LATEST)
 3. In the cloudfront distribution, edit the behavior by bumping the version to the latest lambda version
+4. Invalidate * (or at least /) in the cloudfront distribution
 4. Wait a few eons while cloudfront updates and you're good to go
