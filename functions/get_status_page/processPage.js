@@ -6,7 +6,8 @@ function tables(doc) {
   return doc('#current_events_block table.fullWidth tbody');
 }
 
-function removeHappyRows(doc, table) {
+// Ditch any rows in this table that say the service is operating normally.
+function removeHappiness(doc, table) {
   table.find('tr').each((_, row) => {
     const image = doc(row).find('img')[0];
     if (image.attribs.src.indexOf(NOTHING_WRONG_IMAGE) > -1) {
@@ -19,14 +20,14 @@ function removeHappyRows(doc, table) {
   });
 }
 
+// Process the given html page and return the modified one.
 module.exports = (pageBody) => {
   const doc = cheerio.load(pageBody)
 
   tables(doc).each((_, table) => {
-    removeHappyRows(doc, doc(table));
+    removeHappiness(doc, doc(table));
   });
 
   pageBody = doc.html();
-  pageBody = pageBody.replace('Current Status', 'Kujo &lt; Ethel');
   return pageBody;
 };
