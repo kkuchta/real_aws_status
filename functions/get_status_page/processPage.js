@@ -20,6 +20,10 @@ function removeHappiness(doc, table) {
   });
 }
 
+function removeNoRecentEvents(doc) {
+  doc('#current_events_block table.fullWidth tbody tr').remove();
+}
+
 // Process the given html page and return the modified one.
 module.exports = (pageBody) => {
   const doc = cheerio.load(pageBody)
@@ -27,6 +31,8 @@ module.exports = (pageBody) => {
   tables(doc).each((_, table) => {
     removeHappiness(doc, doc(table));
   });
+
+  removeNoRecentEvents(doc)
 
   pageBody = doc.html();
   return pageBody;
