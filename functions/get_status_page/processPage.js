@@ -29,9 +29,23 @@ function removeNoRecentEvents(doc) {
   doc('#current_events_block table.fullWidth tbody tr').remove();
 }
 
+function addAds(doc) {
+  doc('head').append(`
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-8670872531276606",
+        enable_page_level_ads: true
+      });
+    </script>
+    `);
+}
+
 // Process the given html page and return the modified one.
 module.exports = (pageBody) => {
-  const doc = cheerio.load(pageBody)
+  const doc = cheerio.load(pageBody);
+
+  addAds(doc);
 
   tables(doc).each((_, table) => {
     removeHappiness(doc, doc(table));
