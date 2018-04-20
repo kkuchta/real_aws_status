@@ -25,10 +25,6 @@ function removeHappiness(doc, table) {
   });
 }
 
-function removeNoRecentEvents(doc) {
-  doc('#current_events_block table.fullWidth tbody tr').remove();
-}
-
 function addAds(doc) {
   doc('head').append(`
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -48,10 +44,12 @@ module.exports = (pageBody) => {
   addAds(doc);
 
   tables(doc).each((_, table) => {
-    removeHappiness(doc, doc(table));
+    table = doc(table)
+    removeHappiness(doc, table);
+    if (table.find('tr').length == 0) {
+      table.remove();
+    }
   });
-
-  removeNoRecentEvents(doc)
 
   pageBody = doc.html();
   return pageBody;
